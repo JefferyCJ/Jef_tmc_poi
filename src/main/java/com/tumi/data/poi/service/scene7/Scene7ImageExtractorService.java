@@ -18,5 +18,6 @@ public interface Scene7ImageExtractorService {
      * @throws Exception
      */
     List<ProductWorkDataFile> syncImages(ProductWorkDataFile workData) throws Exception;
+
 }
 
