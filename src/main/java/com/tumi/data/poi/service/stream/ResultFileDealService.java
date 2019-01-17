@@ -12,5 +12,10 @@ import java.util.List;
  * @describe:
  */
 public interface ResultFileDealService {
+    /** download file
+     * @param records
+     * @param filePath
+     * @throws Exception
+     */
     void fileDownload(List<List<WorkData>> records, String filePath) throws Exception;
 }

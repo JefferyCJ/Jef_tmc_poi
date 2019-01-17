@@ -12,5 +12,11 @@ import java.util.List;
  * @describe:
  */
 public interface Scene7ImageExtractorService {
+    /**sync Scene7 images
+     * @param workData
+     * @return
+     * @throws Exception
+     */
     List<ProductWorkDataFile> syncImages(ProductWorkDataFile workData) throws Exception;
 }
+
