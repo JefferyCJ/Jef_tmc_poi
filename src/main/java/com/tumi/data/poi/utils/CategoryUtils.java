@@ -15,9 +15,9 @@ public class CategoryUtils {
 
     public static void fill(List<List<WorkData>> lists, Set<String> removedCategories, String col) {
         lists.forEach(list -> {
-            WorkData data = WorkDataUtils.getData(list, col);
+            WorkData data = WorkDataUtils.getData2String(list, col);
             if (data != null) {
-                List<String> categories = WorkDataUtils.getData(data);
+                List<String> categories = WorkDataUtils.getData2ListString(data);
                 if (isNotEmpty(categories)) {
                     for (int i = 0; i < categories.size(); i++) {
                         String val = categories.get(i);

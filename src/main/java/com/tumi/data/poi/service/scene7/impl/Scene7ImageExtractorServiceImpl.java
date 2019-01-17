@@ -46,12 +46,14 @@ public class Scene7ImageExtractorServiceImpl implements Scene7ImageExtractorServ
     @Override
     public List<ProductWorkDataFile> syncImages(ProductWorkDataFile dataFile) {
         LOG.info("product num is:[" + CollectionUtils.size(dataFile.getWorkData()) + "]");
-        ProductWorkDataFile productBaseWorkDataFile = new ProductWorkDataFileImpl(poiProperties.getResultBaseFile());
-        ProductWorkDataFile productNoPicWorkDataFile = new ProductWorkDataFileImpl(poiProperties.getResultNoPictureFile());
+        ProductWorkDataFile productBaseWorkDataFile = new ProductWorkDataFileImpl();
+        productBaseWorkDataFile.setFileName(poiProperties.getResultBaseFile());
+        ProductWorkDataFile productNoPicWorkDataFile = new ProductWorkDataFileImpl();
+        productNoPicWorkDataFile.setFileName(poiProperties.getResultNoPictureFile());
         LOG.info("begin check product's scene7 images...");
         dataFile.getWorkData().forEach(list -> {
-            WorkData data = WorkDataUtils.getData(list, poiProperties.getStyleCodeColumn());
-            String styleVariantCode = WorkDataUtils.getDataString(data);
+            WorkData data = WorkDataUtils.getData2String(list, poiProperties.getStyleCodeColumn());
+            String styleVariantCode = WorkDataUtils.getData2String(data);
             if (StringUtils.contains(styleVariantCode, "_SV")) {
                 styleVariantCode = StringUtils.substringBefore(styleVariantCode, "_SV");
             }

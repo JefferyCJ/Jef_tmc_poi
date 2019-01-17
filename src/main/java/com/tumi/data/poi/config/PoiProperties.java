@@ -9,10 +9,13 @@ public class PoiProperties {
 
     private String productFile;
     private String categoryFile;
-    private String categoryColumn;
-    private String styleCodeColumn;
+
     private String resultBaseFile;
     private String resultNoPictureFile;
+    private String categoryColumn;
+    private String styleCodeColumn;
+    private String onlineDateColumn;
+    private String offlineDateColumn;
 
     public String getProductFile() {
         return productFile;
@@ -60,5 +63,21 @@ public class PoiProperties {
 
     public void setResultNoPictureFile(String resultNoPictureFile) {
         this.resultNoPictureFile = resultNoPictureFile;
+    }
+
+    public String getOnlineDateColumn() {
+        return onlineDateColumn;
+    }
+
+    public void setOnlineDateColumn(String onlineDateColumn) {
+        this.onlineDateColumn = onlineDateColumn;
+    }
+
+    public String getOfflineDateColumn() {
+        return offlineDateColumn;
+    }
+
+    public void setOfflineDateColumn(String offlineDateColumn) {
+        this.offlineDateColumn = offlineDateColumn;
     }
 }

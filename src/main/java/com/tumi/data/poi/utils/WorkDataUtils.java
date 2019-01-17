@@ -1,6 +1,7 @@
 package com.tumi.data.poi.utils;
 
 import com.googlecode.easyec.sika.WorkData;
+import com.googlecode.easyec.sika.converters.Date2StringConverter;
 import com.googlecode.easyec.sika.converters.Object2StringConverter;
 import com.googlecode.easyec.sika.mappings.ColumnEvaluatorFactory;
 import com.googlecode.easyec.sika.mappings.UnknownColumnException;
@@ -20,7 +21,30 @@ import static java.util.Collections.emptyList;
  */
 public class WorkDataUtils {
 
-    public static WorkData getData(List<WorkData> list, String col) {
+
+    public static String getDate2String(WorkData data) {
+        String result = null;
+        if (null != data) {
+            WorkData.WorkDataType workDataType = data.getWorkDataType();
+            if (null != workDataType && workDataType.equals(WorkData.WorkDataType.NUMBER)) {
+                result = DateUtils.number2DateString((Double) data.getValue(), "MM-dd-yyyy");
+            } else if (null != workDataType && workDataType.equals(WorkData.WorkDataType.DATE)) {
+                result = data.getValue(new Date2StringConverter("MM-dd-yyyy"));
+            } else if (null != workDataType && workDataType.equals(WorkData.WorkDataType.STRING)) {
+                result = data.getValue(new Object2StringConverter());
+            }
+        }
+        return result;
+    }
+
+
+    public static String getData2String(WorkData data) {
+        String value = data.getValue(new Object2StringConverter());
+        if (StringUtils.isBlank(value)) return null;
+        return value;
+    }
+
+    public static WorkData getData2String(List<WorkData> list, String col) {
         try {
             return ColumnEvaluatorFactory.evaluateWorkData(list, col);
         } catch (UnknownColumnException e) {
@@ -30,13 +54,7 @@ public class WorkDataUtils {
         }
     }
 
-    public static String getDataString(WorkData data) {
-        String value = data.getValue(new Object2StringConverter());
-        if (StringUtils.isBlank(value)) return null;
-        return value;
-    }
-
-    public static List<String> getData(WorkData data) {
+    public static List<String> getData2ListString(WorkData data) {
         String value = data.getValue(new Object2StringConverter());
         if (StringUtils.isBlank(value)) return emptyList();
 
@@ -48,4 +66,6 @@ public class WorkDataUtils {
 
         return result;
     }
+
+
 }

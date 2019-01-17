@@ -18,8 +18,7 @@ public class ProductWorkDataFileImpl implements ProductWorkDataFile {
     private String fileName;
     private List<List<WorkData>> workData = new ArrayList<>();
 
-    public ProductWorkDataFileImpl(String fileName) {
-        this.fileName = fileName;
+    public ProductWorkDataFileImpl() {
     }
 
     @Override
@@ -37,6 +36,11 @@ public class ProductWorkDataFileImpl implements ProductWorkDataFile {
     @Override
     public List<List<WorkData>> getWorkData() {
         return workData;
+    }
+
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     @Override

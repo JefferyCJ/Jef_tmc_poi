@@ -1,7 +1,7 @@
 package com.tumi.data.poi.service.product;
 
+import com.googlecode.easyec.sika.WorkData;
 import com.tumi.data.poi.domain.ProductWorkDataFile;
-import com.tumi.data.poi.domain.impl.ProductWorkDataFileImpl;
 
 import java.util.List;
 
@@ -17,4 +17,6 @@ public interface TumiProductService {
     List<ProductWorkDataFile> refactoring() throws Exception;
 
     ProductWorkDataFile checkCategories() throws Exception;
+
+    void checkLineDate(List<List<WorkData>> workDataList );
 }

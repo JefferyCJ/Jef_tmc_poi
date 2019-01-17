@@ -1,5 +1,6 @@
 package com.tumi.data.poi.service.product.impl;
 
+import com.googlecode.easyec.sika.WorkData;
 import com.googlecode.easyec.sika.WorkbookReader;
 import com.googlecode.easyec.sika.ss.ExcelFactory;
 import com.tumi.data.poi.config.PoiProperties;
@@ -10,6 +11,8 @@ import com.tumi.data.poi.handler.PrdCategoryHandler;
 import com.tumi.data.poi.service.product.TumiProductService;
 import com.tumi.data.poi.service.scene7.Scene7ImageExtractorService;
 import com.tumi.data.poi.utils.CategoryUtils;
+import com.tumi.data.poi.utils.WorkDataUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,6 @@ import javax.annotation.Resource;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.List;
 
 /**
@@ -47,24 +47,14 @@ public class TumiProductServiceImpl implements TumiProductService {
             LOG.error("not find any data after check category");
             return null;
         }
-        ProductWorkDataFile workDataFile = (ProductWorkDataFile) Proxy.newProxyInstance(
-                baseData.getClass().getClassLoader(),
-                baseData.getClass().getInterfaces(),
-                new InvocationHandler() {
-                    @Override
-                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        ProductWorkDataFile invoke = (ProductWorkDataFile) method.invoke(baseData, args);
-
-                        return invoke;
-                    }
-                });
-        return this.scene7ImageExtractorService.syncImages(workDataFile);
+        this.checkLineDate(baseData.getWorkData());
+        return this.scene7ImageExtractorService.syncImages(baseData);
     }
 
     @Override
     public ProductWorkDataFile checkCategories() throws Exception {
-        ProductWorkDataFile workDataFile = new ProductWorkDataFileImpl(poiProperties.getProductFile());
-
+        ProductWorkDataFile workDataFile = new ProductWorkDataFileImpl();
+        workDataFile.setFileName(poiProperties.getProductFile());
         InputStream in1 = loadFromLocal(poiProperties.getCategoryFile());
         InputStream in2 = loadFromLocal(poiProperties.getProductFile());
 
@@ -87,6 +77,29 @@ public class TumiProductServiceImpl implements TumiProductService {
         LOG.info("category list check end...");
         workDataFile.setWorkData(handler2.getRecords());
         return workDataFile;
+    }
+
+    @Override
+    public void checkLineDate(List<List<WorkData>> workDataList) {
+        LOG.info("begin check online date&offline date...");
+        workDataList.forEach(list -> {
+            //处理日期逻辑
+            WorkData onlineDate = WorkDataUtils.getData2String(list, poiProperties.getOnlineDateColumn());
+            WorkData offlineDate = WorkDataUtils.getData2String(list, poiProperties.getOfflineDateColumn());
+            if (null != onlineDate) {
+                String onlineString = WorkDataUtils.getDate2String(onlineDate);
+                String offlineString = WorkDataUtils.getDate2String(offlineDate);
+                if (StringUtils.isBlank(onlineString) || StringUtils.isBlank(offlineString)) {
+                    LOG.error("The launch date of the product seems to be wrong,styleCode is:["
+                            + WorkDataUtils.getData2String(
+                            WorkDataUtils.getData2String(list, poiProperties.getStyleCodeColumn())) + "]");
+                }
+                onlineDate.setValue(onlineString);
+                offlineDate.setValue(offlineString);
+            }
+            //处理字符串为0的逻辑
+
+        });
     }
 
     private InputStream loadFromLocal(String file) throws IOException {
