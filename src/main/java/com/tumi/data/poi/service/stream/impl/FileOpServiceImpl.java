@@ -4,7 +4,7 @@ import com.googlecode.easyec.sika.WorkData;
 import com.googlecode.easyec.sika.WorkbookWriter;
 import com.googlecode.easyec.sika.ss.ExcelFactory;
 import com.tumi.data.poi.callback.DefaultWorkbookCallback;
-import com.tumi.data.poi.service.stream.ResultFileDealService;
+import com.tumi.data.poi.service.stream.FileOpService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ import java.util.List;
  * @version: 2019/1/14 11:29 AM
  * @describe:
  */
-@Service("resultFileDealService")
-public class ResultFileDealServiceImpl implements ResultFileDealService {
+@Service("fileOpService")
+public class FileOpServiceImpl implements FileOpService {
     @Override
     public void fileDownload(List<List<WorkData>> records, String filePath) throws Exception {
         WorkbookWriter w1 = new WorkbookWriter();

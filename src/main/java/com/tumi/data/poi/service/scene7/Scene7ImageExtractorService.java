@@ -1,5 +1,6 @@
 package com.tumi.data.poi.service.scene7;
 
+import com.googlecode.easyec.sika.WorkData;
 import com.tumi.data.poi.domain.ProductWorkDataFile;
 
 import java.util.List;
@@ -12,11 +13,7 @@ import java.util.List;
  * @describe:
  */
 public interface Scene7ImageExtractorService {
-    /**sync Scene7 images
-     * @param workData
-     * @return
-     * @throws Exception
-     */
-    List<ProductWorkDataFile> syncImages(ProductWorkDataFile workData) throws Exception;
+
+    void executeSyncPicture(List<WorkData> list, ProductWorkDataFile productBaseWorkDataFile, ProductWorkDataFile productNoPicWorkDataFile);
 }
 

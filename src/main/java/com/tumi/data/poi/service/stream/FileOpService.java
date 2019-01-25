@@ -11,7 +11,7 @@ import java.util.List;
  * @version: 2019/1/14 11:28 AM
  * @describe:
  */
-public interface ResultFileDealService {
+public interface FileOpService {
     /** download file
      * @param records
      * @param filePath

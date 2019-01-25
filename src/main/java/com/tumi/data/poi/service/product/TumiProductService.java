@@ -18,5 +18,9 @@ public interface TumiProductService {
 
     ProductWorkDataFile checkCategories() throws Exception;
 
-    void checkLineDate(List<List<WorkData>> workDataList );
+    List<ProductWorkDataFile> buildWorkDataFiles(ProductWorkDataFile dataFile);
+
+    void checkLineData0(List<WorkData> list);
+
+    void checkLineDate(List<List<WorkData>> workDataList);
 }
