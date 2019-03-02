@@ -3,11 +3,8 @@ package com.tumi.data.poi.service.scene7.impl;
 import com.googlecode.easyec.sika.WorkData;
 import com.tumi.data.poi.config.PoiProperties;
 import com.tumi.data.poi.config.Scene7Properties;
-import com.tumi.data.poi.domain.ProductWorkDataFile;
-import com.tumi.data.poi.domain.impl.ProductWorkDataFileImpl;
 import com.tumi.data.poi.service.scene7.Scene7ImageExtractorService;
 import com.tumi.data.poi.utils.WorkDataUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +17,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,17 +37,13 @@ public class Scene7ImageExtractorServiceImpl implements Scene7ImageExtractorServ
     @Resource
     private RestTemplate restTemplate;
 
-    private List<ProductWorkDataFile> workDataFileList = new ArrayList<>();
 
     @Override
-    public List<ProductWorkDataFile> syncImages(ProductWorkDataFile dataFile) {
-        LOG.info("product num is:[" + CollectionUtils.size(dataFile.getWorkData()) + "]");
-        ProductWorkDataFile productBaseWorkDataFile = new ProductWorkDataFileImpl(poiProperties.getResultBaseFile());
-        ProductWorkDataFile productNoPicWorkDataFile = new ProductWorkDataFileImpl(poiProperties.getResultNoPictureFile());
-        LOG.info("begin check product's scene7 images...");
-        dataFile.getWorkData().forEach(list -> {
-            WorkData data = WorkDataUtils.getData(list, poiProperties.getStyleCodeColumn());
-            String styleVariantCode = WorkDataUtils.getDataString(data);
+    public void executeSyncPicture(List<WorkData> list) {
+        try {
+            WorkData data = WorkDataUtils.getData2String(list, poiProperties.getStyleCodeColumn());
+
+            String styleVariantCode = WorkDataUtils.getData2String(data);
             if (StringUtils.contains(styleVariantCode, "_SV")) {
                 styleVariantCode = StringUtils.substringBefore(styleVariantCode, "_SV");
             }
@@ -62,27 +54,15 @@ public class Scene7ImageExtractorServiceImpl implements Scene7ImageExtractorServ
                 imageSetName = styleVariantCode;
             }
             final String scene7Url = scene7Properties.getScene7Url() + "/" + imageSetName;
-            LOG.info("scene7 url:[" + scene7Url + "]");
+            LOG.info(Thread.currentThread().getName() + " sync prod sku 【" + styleVariantCode + "】, scene7 url:【" + scene7Url + "】");
             final String imageSetUrl = scene7Url + scene7Properties.getImagesetParam();
             final String imageSet = getImageSet(imageSetUrl);
-            if (imageSet != null && !StringUtils.isBlank(imageSet)) {
-                productBaseWorkDataFile.addData(list);
-            } else {
-                LOG.warn("No Image Set found for " + styleVariantCode);
-                productNoPicWorkDataFile.addData(list);
+            if (StringUtils.isBlank(imageSet)) {
+                WorkDataUtils.appendErrorLabel(list, "No Image Set found for 【" + styleVariantCode+"】");
             }
-
-        });
-        LOG.info("check  product's scene7 images end...");
-
-        if (CollectionUtils.isNotEmpty(productBaseWorkDataFile.getWorkData())) {
-            workDataFileList.add(productBaseWorkDataFile);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
         }
-        LOG.info("find no picture product num is" + CollectionUtils.size(productNoPicWorkDataFile.getWorkData()));
-        if (CollectionUtils.isNotEmpty(productNoPicWorkDataFile.getWorkData())) {
-            workDataFileList.add(productNoPicWorkDataFile);
-        }
-        return workDataFileList;
     }
 
 

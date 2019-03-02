@@ -6,7 +6,6 @@ import com.googlecode.easyec.sika.ss.ExcelFactory;
 import com.tumi.data.poi.callback.DefaultWorkbookCallback;
 import com.tumi.data.poi.handler.DefaultWorkbookHandler;
 import com.tumi.data.poi.handler.PrdCategoryHandler;
-import com.tumi.data.poi.utils.CategoryUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,14 +22,12 @@ import java.io.InputStream;
 public class PoiApplicationTests {
 
 
-
-
     @Test
     public void parseExcel() throws Exception {
         InputStream in1 = load("/Users/jefferychan/Desktop/removed_categories.xlsx");
         InputStream in2 = load("/Users/jefferychan/Desktop/20181129.xlsx");
 
-        PrdCategoryHandler handler1 = new PrdCategoryHandler();
+        PrdCategoryHandler handler1 = new PrdCategoryHandler("HK");
         WorkbookReader r1 = new WorkbookReader();
         r1.add(handler1);
 
@@ -41,11 +38,12 @@ public class PoiApplicationTests {
         ExcelFactory.getInstance().read(in1, r1);
         ExcelFactory.getInstance().read(in2, r2);
 
-        CategoryUtils.fill(
-            handler2.getRecords(),
-            handler1.getCategories(),
-            "T"
-        );
+//        CategoryUtils.fill(
+//                handler2.getRecords(),
+//                handler1.getCategories(),
+//                "T",
+//                true
+//        );
 
         WorkbookWriter w1 = new WorkbookWriter();
         w1.add(new DefaultWorkbookCallback(handler2.getRecords()));

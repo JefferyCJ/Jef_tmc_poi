@@ -14,9 +14,17 @@ import java.util.Set;
 import static com.googlecode.easyec.sika.event.WorkbookBlankRowListener.DEFAULT;
 import static com.googlecode.easyec.sika.mappings.ColumnEvaluatorFactory.evaluateWorkData;
 
+/**
+ * @author jefferychan
+ */
 public class PrdCategoryHandler extends WorkbookRowHandler {
 
     private Set<String> categories = new HashSet<>();
+    private String site;
+
+    public PrdCategoryHandler(String site) {
+        this.site = site;
+    }
 
     @Override
     public void doInit() throws WorkingException {
@@ -38,7 +46,8 @@ public class PrdCategoryHandler extends WorkbookRowHandler {
     }
 
     private String getCategory(List<WorkData> list) throws UnknownColumnException {
-        String val = evaluateWorkData(list, "A").getValue(new Object2StringConverter());
+//        String column = StringUtils.equalsIgnoreCase(site, TumiProductService.CN) ? "A" : "B";
+        String val = evaluateWorkData(list,  "A").getValue(new Object2StringConverter());
         if (val != null) val = StringUtils.trim(val);
         return val;
     }

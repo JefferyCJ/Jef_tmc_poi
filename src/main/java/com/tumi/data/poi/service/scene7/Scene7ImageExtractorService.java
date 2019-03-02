@@ -1,6 +1,7 @@
 package com.tumi.data.poi.service.scene7;
 
-import com.tumi.data.poi.domain.ProductWorkDataFile;
+import com.googlecode.easyec.sika.WorkData;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
@@ -12,5 +13,11 @@ import java.util.List;
  * @describe:
  */
 public interface Scene7ImageExtractorService {
-    List<ProductWorkDataFile> syncImages(ProductWorkDataFile workData) throws Exception;
+    /**
+     * 同步图片
+     * @param list
+     */
+    @Async
+    void executeSyncPicture(List<WorkData> list);
 }
+
