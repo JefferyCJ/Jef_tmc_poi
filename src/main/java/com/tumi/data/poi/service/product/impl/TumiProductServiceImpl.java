@@ -229,6 +229,27 @@ public class TumiProductServiceImpl implements TumiProductService {
         }
     }
 
+    @Override
+    public void scanCheckProductTypeFile(String filePath) throws Exception {
+        List<List<WorkData>> prodWorkData = new ArrayList<>();
+        List<File> productFiles = fileOpService.scanFiles(filePath);
+        for (File prodDir : productFiles) {
+            if (prodDir.isFile()) {
+                try {
+                    prodWorkData.addAll(getWorkDatas(prodDir));
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                } finally {
+                    fileOpService.moveFileToHistory(filePath, prodDir);
+                }
+            }
+        }
+
+        if (CollectionUtils.isNotEmpty(prodWorkData)){
+
+        }
+    }
+
     private List<ProductWorkDataFile> refactorWorkData(List<List<WorkData>> prodWorkDatas, String site) {
         List<ProductWorkDataFile> dataFiles = new ArrayList<>();
         ProductWorkDataFile resultData = new ProductWorkDataFileImpl(site);

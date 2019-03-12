@@ -76,5 +76,8 @@ public interface TumiProductService {
      */
     void checkMultipleLanguage(List<WorkData> list);
 
+    void scanCheckProductTypeFile(String filePath) throws Exception;
+
+
     InputStream loadFromLocal(File file) throws IOException;
 }

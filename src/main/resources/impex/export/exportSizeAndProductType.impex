@@ -1,0 +1,15 @@
+$productCatalog=cvacceleratorplusHKProductCatalog
+                $productCatalogName=CV AccPlus Apparel Product Catalog
+                $catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+                $prices=europe1prices[translator=de.hybris.platform.europe1.jalo.impex.Europe1PricesTranslator]
+                $baseProduct=baseProduct(code, $catalogVersion)
+                $approved=approvalstatus(code)[default='approved']
+                $taxGroup=Europe1PriceFactory_PTG(code)[default=hk-sales-tax-full]
+                $lang=en
+                $systemName=TumiClassification;
+                $systemVersion=1.0;
+                $catVer=catalogVersion(version[default='Staged'],catalog(id[default=$productCatalog]));
+                $clSysVer=catalogVersion(version[default='$systemVersion'],catalog(id[default='$systemName']));
+                $YCL=system='$systemName',version='$systemVersion',translator=de.hybris.platform.catalog.jalo.classification.impex.ClassificationAttributeTranslator;
+
+INSERT_UPDATE ApparelSizeVariantProduct;code[unique=true];@levelThreeType[$YCL][lang=en];@levelThreeType[$YCL][lang=zh_TW];monogramable;monogramPatch;monogramLuggageTag;approvalstatus(code)[default='approved'];$catalogVersion
